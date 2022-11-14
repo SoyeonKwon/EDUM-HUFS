@@ -1,0 +1,83 @@
+{% load staticfiles %}
+{% load static %}
+<meta charset="utf-8">
+<link rel="stylesheet" type="text/css" href="{% static 'static/images/style.css' %}">
+<html>
+  <head>
+    <a src="{% url 'profile'  %}"></a>
+    <img  src="{% url 'imgedumimg'%}" style="margin-left: auto; margin-right: auto; display: block;">
+    <title>Cam_notifier</title>
+    <script src="{% static '/channels/js/websocketbridge.js' %}" type="text/javascript"></script>
+
+  </head>
+
+  <div align="center">
+      <h1><font size="10em">EDUM</font></h1>
+    <p>{% if user.is_authenticated %}
+        <h2><font size="3em"><div align="right">
+      <br>관리자: {{ user.username }}, 핸드폰: {{user.profile.phone_number}}<br>
+        </div></font></h2>
+        알림현황
+        {% else %}
+        Not logged in.
+        {% endif %}
+    </p>
+
+    <ul id="notifylist"></ul>
+    {% if user.is_authenticated %}
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const webSocketBridge = new channels.WebSocketBridge();
+      const nl = document.querySelector("#notifylist");
+      var alert_audio = new Audio('audios/note.mp3');
+      alert_audio.volume = (1.0);
+      var winHandle;
+
+      webSocketBridge.connect('/notifications/');
+      webSocketBridge.listen(function(action, stream) {
+        console.log("RESPONSE:", action);
+	function popupOpen(){
+		var url= "home/alert.html";    
+		var winWidth = 1080;
+	    var winHeight = 1080;
+	    var popupOption= "width="+winWidth+", height="+winHeight;
+	    if(winHandle) {winHandle.close();}
+		winHandle = window.open(url,"",popupOption);
+	}
+        if(action.event == "warning") {
+          var el = document.createElement("li");
+          var e2 = document.createElement("li");
+          var e3 = document.createElement("li");
+          var e4 = document.createElement("li");
+          if(action.trash){
+            el.innerHTML = `Trash on camera<b>${action.cam_id}</b>!(location:${action.cam_location})`;
+            nl.appendChild(el);
+          }
+          if(action.instrusion){
+            e2.innerHTML = `Intrusion on camera<b>${action.cam_id}</b>!(location:${action.cam_location})`;
+            nl.appendChild(e2);
+          }
+          if(action.fallen){
+            e3.innerHTML = `Fallen person on camera<b>${action.cam_id}</b>!(location:${action.cam_location})`;
+            nl.appendChild(e3);
+          }
+          if(action.fence){
+            e4.innerHTML = `Trepassing on camera<b>${action.cam_id}</b>!(location:${action.cam_location})`;
+            nl.appendChild(e4);
+          }
+	  alert_audio.play();
+	  popupOpen();
+        }
+	else if(action.event == "created") {
+          var el = document.createElement("li");
+          el.innerHTML = `New camera <b>${action.cam_id}</b> has installed!(location:${action.cam_location})`;
+          nl.appendChild(el);
+        }
+      })
+      document.ws = webSocketBridge; /* for debugging */
+    })
+    {% endif %}
+    </script>
+      </div>
+  </body>
+</html>

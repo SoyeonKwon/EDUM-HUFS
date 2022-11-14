@@ -1,0 +1,49 @@
+<meta charset="utf-8">
+<html>
+  <head>
+  {% for cam in cams %}
+     {% if cam.cam_status == 'warning' %}
+     <title>{{ cam.cam_id }} camera location: {{ cam.cam_location }}</title>
+     {% else %}
+     <title>No warning cameras</title>
+     {% endif %}
+  {% endfor %}
+   </head>
+  <body>
+
+ {% for cam in cams %}
+  {% if cam.cam_status == 'warning' %}
+    {% if cam.cam_id == 0 %}
+ <h1>camera {{cam.cam_id}}: {{cam.cam_location}}</h1>
+ <img src="{% url 'livefe'%}">
+    {% elif cam.cam_id == 1%}
+ <h1>camera {{cam.cam_id}}: {{cam.cam_location}}</h1>
+ <img src="{% url 'livefe1'%}">
+     {% elif cam.cam_id == 2%}
+ <h1>camera {{cam.cam_id}}: {{cam.cam_location}}</h1>
+ <img src="{% url 'livefe2'%}">
+  {% endif %}
+
+  {% else %}
+
+  {% endif %}
+  {% endfor %}
+  <br>
+  <br>
+ <script>
+  changefunction =  setInterval(function() {
+            document.body.style.backgroundColor = "#EEEEEE";
+        },750)
+    changefunction =  setInterval(function() {
+
+        document.body.style.backgroundColor = "#DD0000";
+     },1500)
+  </script>
+ </body>
+  <script>
+        //var alert_audio = new Audio('audios/note.mp3');
+        //alert_audio.volume = (10);
+	//alert_audio.play();
+
+  </script>
+</html>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>주민페이지</title>
+    <h1 align="center" style="color:#000000;">주민여러분 환영합니다!</h1>
+        <style>
+        .gr {
+            width: 350px;
+        }
+        .gr div{
+            padding: 10px;
+			border: 10px solid #2db400;
+			background-color: #ffffff;
+        }
+        body {
+            background-color: #e3ffe0;
+        }
+    </style>
+</head>
+<body>
+
+<div style="position: absolute; left: 780px; top: 150px;" class="gr">
+    <div  align="center" style="color: #000000;">
+        <a href="{% url 'residentcam0'%}">공학관 1층복도</a>
+    </div>
+</div>
+
+<div style="position: absolute; left: 780px; top: 300px;" class="gr">
+    <div  align="center" style="color: #000000;">
+        <a href="{% url 'residentcam1'%}">2번카메라</a>
+    </div>
+</div>
+
+</body>
+</html>
